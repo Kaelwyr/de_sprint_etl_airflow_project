@@ -47,6 +47,15 @@ def prepare_data_for_d_customer(test_repo, test_date):
     test_repo.execute_postgres_query(query=query, params=[])
 
 
+@pytest.fixture(scope='class')
+def prepare_market_share(test_repo,test_date):
+    prepare_data(test_repo, scripts=['d_customer_3.sql', 'd_item.sql', 'd_city.sql',
+                                     'f_customer_research.sql', 'f_order.sql', 'market_share_report.sql'])
+    query_templ = get_sql_query_from_file('sql/insert_market_share.sql')
+    query = Template(query_templ).render(ds=test_date)
+    test_repo.execute_postgres_query(query=query, params=[])
+
+
 @pytest.mark.usefixtures('prepare_data_for_d_customer')
 class TestPostgresScript:
 
@@ -172,3 +181,28 @@ class TestPostgresDimCustomer:
         assert res[0][1] == '2024-08-31'
         assert res[1][0] == test_date
         assert res[1][1] == '9999-12-31'
+
+
+@pytest.mark.usefixtures('prepare_market_share')
+class TestPostgresScriptMarketShareReport:
+
+    def test_market_share_report_count(self, test_repo):
+        test_query_1 = """
+               SELECT count(1)
+               FROM rep.market_share_report
+               """
+        res = test_repo.execute_postgres_query_with_result(**{'query': test_query_1})
+
+        assert res[0][0] == 1
+
+    def test_market_share_report(self, test_repo):
+        test_query_1 = """
+               SELECT date_time::date::text, city_id, qty_share, amt_share
+               FROM rep.market_share_report
+               """
+        res = test_repo.execute_postgres_query_with_result(query=test_query_1)
+
+        assert res[0][0] == '2024-09-01'
+        assert res[0][1] == 1
+        assert res[0][2] == 0.45
+        assert res[0][3] == 0.375
