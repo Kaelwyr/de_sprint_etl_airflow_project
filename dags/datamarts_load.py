@@ -10,7 +10,7 @@ from datasets.datasets import (activity_log_dataset, customer_dataset, order_log
 
 with DAG('datamarts_load',
          default_args=default_args,
-         start_date=datetime(2024, 6, 1),
+         start_date=datetime(2024, 8, 28),
          schedule_interval='@daily',
          tags=['Postgres'],
          catchup=True,
@@ -78,7 +78,7 @@ with DAG('datamarts_load',
         task_id='delete_from_customer_research_ods',
         conn_id=pipeline_config['db_connection'],
         sql="""DELETE FROM ods.customer_research
-                   WHERE date_time::date='{{ ds }}'"""
+                   WHERE date_id::date='{{ ds }}'"""
     )
 
     load_customer_research_ods = SQLExecuteQueryOperator(
@@ -174,19 +174,13 @@ with DAG('datamarts_load',
         conn_id=pipeline_config['db_connection'],
         sql="""
                DELETE FROM cdm.f_customer_research
-               WHERE date_time::date='{{ ds }}'""")
+               WHERE date_id::date='{{ ds }}'""")
 
     f_customer_research = SQLExecuteQueryOperator(
         task_id='f_customer_research',
         conn_id=pipeline_config['db_connection'],
         sql="sql/insert_f_customer_research.sql",
         outlets=[customer_research_dataset])
-
-    customer_report = SQLExecuteQueryOperator(
-        task_id='load_customer_report',
-        conn_id=pipeline_config['db_connection'],
-        sql='sql/insert_customer_report.sql'
-    )
 
     start_task >> check_raw_order_log  >> delete_from_order_log_ods >> load_order_log_ods >> end_source_load
     start_task >> check_raw_activity_log >> delete_from_activity_log_ods >> load_activity_log_ods >> end_source_load

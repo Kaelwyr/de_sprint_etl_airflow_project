@@ -20,7 +20,7 @@ def response_check(response):
 
 with DAG('api_data_load',
          default_args=default_args,
-         start_date=datetime(2024, 6, 1),
+         start_date=datetime(2024, 8, 28),
          schedule_interval='@daily',
          tags=['API', 'Postgres'],
          catchup=True,
@@ -93,7 +93,7 @@ with DAG('api_data_load',
         task_id='delete_from_customer_research',
         conn_id=pipeline_config['db_connection'],
         sql="""DELETE FROM raw.customer_research
-                WHERE date_time::date='{{ ds }}'""",
+                WHERE date_id::date='{{ ds }}'""",
     )
 
     customer_research_query = HttpOperator(

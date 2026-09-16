@@ -1,11 +1,11 @@
-INSERT INTO rep.market_share_report( date_time, city_id, qty_share, amt_share)
+INSERT INTO rep.market_share_report( date_id, city_id, qty_share, amt_share)
 WITH competition AS (
-    SELECT date_time,
+    SELECT date_id,
            city_id,
            sum(sales_qty) total_qty,
            sum(sales_amt) total_amt
         FROM cdm.f_customer_research cr
-    GROUP BY date_time, city_id),
+    GROUP BY date_id, city_id),
 ours AS (
     SELECT create_date,
            city_id,
@@ -20,8 +20,8 @@ SELECT
         o.total_amt/(o.total_amt + c.total_amt) as amt_share
     FROM ours o
         JOIN competition c
-ON o.create_date = c.date_time AND o.city_id  = c.city_id
-ON CONFLICT (date_time, city_id) DO UPDATE
+ON o.create_date = c.date_id AND o.city_id  = c.city_id
+ON CONFLICT (date_id, city_id) DO UPDATE
 SET qty_share = EXCLUDED.qty_share,
 amt_share = EXCLUDED.amt_share
 ;

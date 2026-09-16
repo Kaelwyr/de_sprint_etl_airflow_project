@@ -197,7 +197,7 @@ class TestPostgresScriptMarketShareReport:
 
     def test_market_share_report(self, test_repo):
         test_query_1 = """
-               SELECT date_time::date::text, city_id, qty_share, amt_share
+               SELECT date_id::date::text, city_id, qty_share, amt_share
                FROM rep.market_share_report
                """
         res = test_repo.execute_postgres_query_with_result(query=test_query_1)
