@@ -78,12 +78,12 @@ class ShopAPIPostgresRepository(ShopAPIRepository):
         ) as conn:
             with conn.cursor() as cur:
                 for model in research:
-                    cur.execute("""INSERT INTO raw.customer_research(date_id, 
+                    cur.execute("""INSERT INTO raw.customer_research(date_time, 
                                                                        category_id, 
                                                                        geo_id, 
                                                                        sales_qty, 
                                                                        sales_amt)
-                                            VALUES (%(date_id)s,
+                                            VALUES (%(date_time)s,
                                                     %(category_id)s,
                                                     %(geo_id)s, 
                                                     %(sales_qty)s, 

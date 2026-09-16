@@ -93,7 +93,7 @@ with DAG('api_data_load',
         task_id='delete_from_customer_research',
         conn_id=pipeline_config['db_connection'],
         sql="""DELETE FROM raw.customer_research
-                WHERE date_id::date='{{ ds }}'""",
+                WHERE date_time::date='{{ ds }}'""",
     )
 
     customer_research_query = HttpOperator(

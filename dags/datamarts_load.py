@@ -174,7 +174,7 @@ with DAG('datamarts_load',
         conn_id=pipeline_config['db_connection'],
         sql="""
                DELETE FROM cdm.f_customer_research
-               WHERE date_id::date='{{ ds }}'""")
+               WHERE date_time::date='{{ ds }}'""")
 
     f_customer_research = SQLExecuteQueryOperator(
         task_id='f_customer_research',
