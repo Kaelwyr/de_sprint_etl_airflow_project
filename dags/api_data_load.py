@@ -6,6 +6,8 @@ from airflow.operators.python import PythonOperator
 from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from airflow.providers.http.operators.http import HttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
+from airflow.operators.empty import EmptyOperator
+
 from data_models.api_pipeline_config import pipeline_config
 from data_models.dag_default_args import default_args
 from utils.api_config import (get_insert_user_activity_log, get_insert_user_order_log, get_insert_customer_research)
@@ -23,6 +25,8 @@ with DAG('api_data_load',
          tags=['API', 'Postgres'],
          catchup=True,
          max_active_runs=1) as dag:
+
+    end_source_load = EmptyOperator(task_id='end_source_load')
 
     check_api = HttpSensor(
         task_id='check_api',
@@ -108,6 +112,6 @@ with DAG('api_data_load',
         provide_context=True
     )
 
-    (check_api >> clean_order_log >> order_log_query >> order_log >>
-     clean_activity_log >> activity_log_query >> activity_log >>
-     clean_customer_research  >> customer_research_query >> customer_research)
+    check_api >> clean_order_log >> order_log_query >> order_log >> end_source_load
+    check_api >> clean_activity_log >> activity_log_query >> activity_log >> end_source_load
+    check_api >> clean_customer_research  >> customer_research_query >> customer_research >> end_source_load
