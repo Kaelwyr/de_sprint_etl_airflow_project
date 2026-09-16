@@ -5,6 +5,7 @@ from airflow.hooks.base import BaseHook
 from data_models.api_pipeline_config import pipeline_config
 from data_models.user_activity_log_model import UserActivityModel
 from data_models.user_order_log_model import UserOrderModel
+from data_models.customer_research_model import CustomerResearchModel
 from repository.shop_api_psycopg_repository import ShopAPIRepository
 
 
@@ -69,6 +70,24 @@ class ShopAPIPostgresRepository(ShopAPIRepository):
                                                     %(action_id)s, 
                                                     %(customer_id)s, 
                                                     %(quantity)s)
+                                                    """, model.model_dump())
+
+    def save_customer_research(self, research: list[CustomerResearchModel]):
+        with psycopg.connect(
+                **self.conn_info
+        ) as conn:
+            with conn.cursor() as cur:
+                for model in research:
+                    cur.execute("""INSERT INTO raw.customer_research(date_id, 
+                                                                       category_id, 
+                                                                       geo_id, 
+                                                                       sales_qty, 
+                                                                       sales_amt)
+                                            VALUES (%(date_id)s,
+                                                    %(category_id)s,
+                                                    %(geo_id)s, 
+                                                    %(sales_qty)s, 
+                                                    %(sales_amt)s)
                                                     """, model.model_dump())
 
     def execute_postgres_query(self, **kwargs):

@@ -2,6 +2,7 @@ import json
 
 from data_models.user_activity_log_model import UserActivityModel
 from data_models.user_order_log_model import UserOrderModel
+from data_models.customer_research_model import CustomerResearchModel
 from repository.shop_api_postgres_repository import ShopAPIPostgresRepository
 
 
@@ -36,3 +37,11 @@ def get_insert_user_activity_log(repo=None, **kwargs):
     data = json.loads(raw_data)
     activity_logs = [UserActivityModel(**row) for row in data]
     repo.save_activity_logs(activity_logs)
+
+def get_insert_customer_research(repo=None, **kwargs):
+    if repo is None:
+        repo = ShopAPIPostgresRepository()
+    raw_data = get_customer_research(**kwargs)
+    data = json.loads(raw_data)
+    research_list = [CustomerResearchModel(**row) for row in data]
+    repo.save_customer_research(research_list) 
