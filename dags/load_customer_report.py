@@ -10,7 +10,7 @@ from datasets.datasets import (activity_log_dataset, customer_dataset, order_log
 
 with DAG('load_customer_report_dag',
         default_args=default_args,
-        start_date=datetime(2024, 9, 1),
+        start_date=datetime(2024, 6, 1),
         schedule=[order_log_dataset, activity_log_dataset, customer_dataset],
         tags=['Postgres'],
         catchup=False,
