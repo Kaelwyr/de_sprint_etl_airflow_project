@@ -83,7 +83,7 @@ class ShopAPIPostgresRepository(ShopAPIRepository):
                                                                        geo_id, 
                                                                        sales_qty, 
                                                                        sales_amt)
-                                            VALUES (%(date_time)s,
+                                            VALUES (%(date_id)s,
                                                     %(category_id)s,
                                                     %(geo_id)s, 
                                                     %(sales_qty)s, 
