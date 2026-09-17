@@ -138,3 +138,9 @@ http://localhost:7001
 3. Выберите соединение `conn_pg`.
 4. Перейдите в "Admin" -> "DAGs".
 5. Запустите DAG `db_migration`.
+
+#### 8. Подключение к тестовой базе данных Postgres
+```text
+jdbc:postgresql://localhost:5432/airflow
+```
+login | pass: airflow | airflow
