@@ -8,9 +8,9 @@ SELECT  DISTINCT ON (uniq_id)
        quantity,
        payment_amount
 FROM ods.user_order_log uol
-         JOIN cdm.d_city c on c.city_id = uol.city_id  and '{{ ds }}'::date BETWEEN c.start_date AND c.end_date
-         JOIN cdm.d_customer cus ON cus.customer_id = uol.customer_id and '{{ ds }}'::date BETWEEN cus.start_date AND cus.end_date
-         JOIN cdm.d_item it on it.item_id = uol.item_id  and '{{ ds }}'::date BETWEEN it.start_date AND it.end_date
+    LEFT JOIN cdm.d_city c on c.city_id = uol.city_id  and '{{ ds }}'::date BETWEEN c.start_date AND c.end_date
+    LEFT JOIN cdm.d_customer cus ON cus.customer_id = uol.customer_id and '{{ ds }}'::date BETWEEN cus.start_date AND cus.end_date
+    LEFT JOIN cdm.d_item it on it.item_id = uol.item_id  and '{{ ds }}'::date BETWEEN it.start_date AND it.end_date
 WHERE uol.date_time::date = '{{ ds }}'::date
-            ORDER BY uniq_id, date_time DESC
+ORDER BY uniq_id, date_time DESC
 on conflict(order_id) do NOTHING;

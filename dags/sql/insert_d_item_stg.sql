@@ -16,6 +16,6 @@ SELECT --получаем дельту и вставляем данные
        uol.item_name
 FROM api_data uol
          LEFT join cdm.d_item dim on dim.item_id = uol.item_id
-         and '{{ ds }}'::date BETWEEN start_date AND end_date
+            AND '{{ ds }}'::date BETWEEN start_date AND end_date
 WHERE (uol.item_name != dim.item_name and dim.end_date='9999-12-31') -- and dim.end_date='9999-12-31' условие нужно чтобы не менять историю даже если на систочнике поменялось
 OR dim.item_id IS NULL;

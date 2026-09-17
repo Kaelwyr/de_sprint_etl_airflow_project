@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Optional
 
 import psycopg
@@ -7,6 +8,16 @@ from data_models.user_activity_log_model import UserActivityModel
 from data_models.user_order_log_model import UserOrderModel
 from data_models.customer_research_model import CustomerResearchModel
 from repository.shop_api_psycopg_repository import ShopAPIRepository
+
+BASE_DIR = Path(__file__).resolve().parent
+
+def get_sql_query_from_file(sql_file):
+    path = Path(sql_file)
+    if not path.is_absolute():
+        path = BASE_DIR / path
+    with path.open('r',encoding='utf-8') as f:
+        query = f.read()
+    return query
 
 
 class ShopAPIPostgresRepository(ShopAPIRepository):
@@ -21,74 +32,31 @@ class ShopAPIPostgresRepository(ShopAPIRepository):
         }
 
     def save_order_logs(self, order_logs: list[UserOrderModel]):
+        query = get_sql_query_from_file('sql/insert_raw_user_order_log.sql')
         with psycopg.connect(
                 **self.conn_info
         ) as conn:
             with conn.cursor() as cur:
                 for model in order_logs:
-                    cur.execute("""INSERT INTO raw.user_order_log(ID,
-                                                                    uniq_id,
-                                                                    date_time,
-                                                                    city_id,
-                                                                    city_name,
-                                                                    customer_id,
-                                                                    first_name,
-                                                                    last_name,
-                                                                    item_id,
-                                                                    item_name,
-                                                                    quantity,
-                                                                    payment_amount)                                                                
-                                            VALUES (%(id)s,
-                                                    %(uniq_id)s,
-                                                    %(date_time)s,
-                                                    %(city_id)s,
-                                                    %(city_name)s,
-                                                    %(customer_id)s, 
-                                                    %(first_name)s, 
-                                                    %(last_name)s, 
-                                                    %(item_id)s, 
-                                                    %(item_name)s, 
-                                                    %(quantity)s, 
-                                                    %(payment_amount)s);
-                                            """, model.model_dump())
+                    cur.execute(query, model.model_dump())
 
     def save_activity_logs(self, activity_logs: list[UserActivityModel]):
+        query = get_sql_query_from_file(sql_file='sql/insert_raw_user_activity_log.sql')
         with psycopg.connect(
                 **self.conn_info
         ) as conn:
             with conn.cursor() as cur:
                 for model in activity_logs:
-                    cur.execute("""INSERT INTO raw.user_activity_log(ID, 
-                                                                       uniq_id, 
-                                                                       date_time, 
-                                                                       action_id , 
-                                                                       customer_id, 
-                                                                       quantity)
-                                            VALUES (%(id)s,
-                                                    %(uniq_id)s,
-                                                    %(date_time)s, 
-                                                    %(action_id)s, 
-                                                    %(customer_id)s, 
-                                                    %(quantity)s)
-                                                    """, model.model_dump())
+                    cur.execute(query, model.model_dump())
 
     def save_customer_research(self, research: list[CustomerResearchModel]):
+        query = get_sql_query_from_file('sql/insert_raw_customer_research.sql')
         with psycopg.connect(
                 **self.conn_info
         ) as conn:
             with conn.cursor() as cur:
                 for model in research:
-                    cur.execute("""INSERT INTO raw.customer_research(date_id, 
-                                                                       category_id, 
-                                                                       geo_id, 
-                                                                       sales_qty, 
-                                                                       sales_amt)
-                                            VALUES (%(date_id)s,
-                                                    %(category_id)s,
-                                                    %(geo_id)s, 
-                                                    %(sales_qty)s, 
-                                                    %(sales_amt)s)
-                                                    """, model.model_dump())
+                    cur.execute(query, model.model_dump())
 
     def execute_postgres_query(self, **kwargs):
         query = kwargs['query']

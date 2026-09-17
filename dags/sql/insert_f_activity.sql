@@ -6,7 +6,7 @@ SELECT DISTINCT ON (uniq_id)
        ual.action_id      ,
        quantity
 FROM ods.user_activity_log ual
-         JOIN cdm.d_customer cus ON cus.customer_id = ual.customer_id and '{{ ds }}'::date BETWEEN cus.start_date AND cus.end_date
+         INNER JOIN cdm.d_customer cus ON cus.customer_id = ual.customer_id and '{{ ds }}'::date BETWEEN cus.start_date AND cus.end_date
          WHERE ual.date_time::date = '{{ ds }}'::date
             ORDER BY uniq_id, date_time DESC
 on conflict(activity_id) do NOTHING;

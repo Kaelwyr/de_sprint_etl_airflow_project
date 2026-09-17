@@ -1,0 +1,26 @@
+INSERT INTO raw.user_order_log(
+ID,
+uniq_id,
+date_time,
+city_id,
+city_name,
+customer_id,
+first_name,
+last_name,
+item_id,
+item_name,
+quantity,
+payment_amount)
+
+VALUES (%(id)s,
+%(uniq_id)s,
+%(date_time)s,
+%(city_id)s,
+%(city_name)s,
+%(customer_id)s,
+%(first_name)s,
+%(last_name)s,
+%(item_id)s,
+%(item_name)s,
+%(quantity)s,
+%(payment_amount)s);

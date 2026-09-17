@@ -17,8 +17,8 @@ SELECT --получаем дельту и вставляем данные
        uol.first_name,
        uol.last_name
 FROM api_data uol
-         LEFT JOIN cdm.d_customer dim ON dim.customer_id = uol.customer_id
-    AND '{{ ds }}'::date BETWEEN start_date AND end_date
+    LEFT JOIN cdm.d_customer dim ON dim.customer_id = uol.customer_id
+        AND '{{ ds }}'::date BETWEEN start_date AND end_date
 WHERE ((uol.first_name != dim.first_name
     OR uol.last_name != dim.last_name) and dim.end_date='9999-12-31') -- and dim.end_date='9999-12-31' условие нужно чтобы не менять историю даже если на систочнике поменялось
-   OR dim.customer_id IS NULL;
+    OR dim.customer_id IS NULL;

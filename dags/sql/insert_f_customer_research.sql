@@ -6,5 +6,5 @@ SELECT
     sales_qty,
     sales_amt
 FROM ods.customer_research r
- JOIN cdm.d_city c on r.geo_id = c.city_id
-  WHERE date_id = '{{ ds }}'::date
+LEFT JOIN cdm.d_city c on r.geo_id = c.city_id
+WHERE date_id = '{{ ds }}'::date

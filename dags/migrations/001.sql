@@ -2,7 +2,7 @@
 -- =========================================================
 
 -- Таблица для сырых данных
-CREATE TABLE raw.customer_research(
+CREATE TABLE IF NOT EXISTS raw.customer_research(
         date_id     TIMESTAMP NOT NULL,
         category_id BIGINT,
         geo_id      BIGINT,
@@ -11,7 +11,7 @@ CREATE TABLE raw.customer_research(
 );
 
 -- Очищенные данные
-CREATE TABLE ods.customer_research(
+CREATE TABLE IF NOT EXISTS ods.customer_research(
         id           BIGINT GENERATED ALWAYS AS IDENTITY,
         date_id      TIMESTAMP NOT NULL,
         category_id  BIGINT,
@@ -22,9 +22,9 @@ CREATE TABLE ods.customer_research(
 );
 
 -- Таблица фактов
-CREATE TABLE cdm.f_customer_research(
+CREATE TABLE IF NOT EXISTS cdm.f_customer_research(
         id           BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
-        date_id    TIMESTAMP NOT NULL,
+        date_id      TIMESTAMP NOT NULL,
         category_id  BIGINT,
         city_id      BIGINT,
         sales_qty    BIGINT,
@@ -34,8 +34,8 @@ CREATE TABLE cdm.f_customer_research(
 );
 
 -- Витрина
-CREATE TABLE rep.market_share_report (
-            date_id   TIMESTAMP NOT NULL,
+CREATE TABLE IF NOT EXISTS rep.market_share_report (
+            date_id     TIMESTAMP NOT NULL,
             city_id     BIGINT NOT NULL,
             qty_share   FLOAT ,
             amt_share   FLOAT,
