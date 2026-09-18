@@ -120,8 +120,8 @@ http://localhost:7001
 1. Перейдите в Airflow UI. Данные для входа (login | pass): Airflow | Airflow
 2. Перейдите в "Admin" -> "Connections".
 3. Добавьте следующие соединения:
-   - `conn_pg` для подключения к базе данных PostgreSQL.
-   - `api__conn` для подключения к API.
+   - `conn_pg` для подключения к базе данных PostgreSQL, в которую будут загружаться данные. (создается отдельно)
+   - `api_conn` для подключения к API. Хост: `https://de-start-sprint-etl-airflow-api.de.education-services.ru`
 
 #### 6. Создание пулов
 
